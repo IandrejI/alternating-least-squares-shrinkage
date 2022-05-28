@@ -1,3 +1,4 @@
+##renv::restore()
 # packages ----------------------------------------------------------------
 library(tidyverse)
 library(rsample)
@@ -35,4 +36,6 @@ movielens <- ratings %>%
 movies[,-1] %>% 
   summarise_if(is.numeric, .funs = c(sum,mean))
 
-
+test <- ratings %>% 
+  select(-timestamp) %>%
+  pivot_wider(names_from = movieId, values_from = rating, values_fill = NA)
