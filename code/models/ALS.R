@@ -3,7 +3,7 @@ library(tidyverse)
 library(glmnet)
 library(grid)
 library(gridExtra)
-library(doParallel)
+
 
 # functions ---------------------------------------------------------------
 
