@@ -1,0 +1,5 @@
+"","impRate","alpha","lambda","dim","RMSE.Valid"
+"93914",6e-04,0.55,0.2,30,NA
+"196348",8e-04,1,4.1,50,"Error : from glmnet C++ code (error code 7777); All used predictors have zero variance
+"
+"112784",0,0.25,8.4,30,"1.05115027439744"

@@ -1,6 +1,9 @@
 # packages ----------------------------------------------------------------
 library(tidyverse)
 library(glmnet)
+library(grid)
+library(gridExtra)
+library(doParallel)
 
 # functions ---------------------------------------------------------------
 
@@ -351,5 +354,4 @@ tune.ALS <- function(M, k = 10, dim = 10, impRate = 0, iterMax = Inf,lambda = 0,
     return(results)
   }
 }
-
 
