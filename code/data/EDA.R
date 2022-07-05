@@ -1,24 +1,46 @@
 ##renv::restore()
 # packages ----------------------------------------------------------------
-library(tidyverse)
-
-
+source("code/models/ALS.R")
 # loadData ---------------------------------------------------------------
-ratings <- read_delim("data/ml-1m/ratings.dat", delim = "::",
-                      col_names = c("userId", "movieId", "rating", "timestamp"))
-movies <- read_delim("data/ml-1m/movies.dat", delim = "::",
-                     col_names = c("movieId", "title", "genres"))
-users <- read_delim("data/ml-1m/users.dat", delim = "::",
-                    col_names = c("userId", "gender", "age", "occupation", "zip"))
+ratings <- read_csv("data/ratings.csv")
+movies <- read_delim("data/movies.csv")
 
-movies5 <- ratings %>% 
+ratings %>% 
+  group_by(movieId) %>% 
+  summarise(n = n()) %>% 
+  arrange(n)
+
+
+movies20 <- ratings %>% 
   group_by(movieId) %>% 
   summarise(n = n()) %>%
-  filter(n > 5)
+  filter(n >= 25)
 
 
 ratings <- ratings %>% 
-  filter(movieId %in% movies5$movieId)
+  filter(movieId %in% movies20$movieId)
+
+ratings %>% 
+  group_by(userId) %>% 
+  summarise(n = n()) %>% 
+  arrange(n)
+
+
+user20 <- ratings %>% 
+  group_by(userId) %>% 
+  summarise(n = n()) %>%
+  filter(n >= 25)
+
+
+ratings <- ratings %>% 
+  filter(userId %in% user20$userId)
+
+ratings %>% 
+  group_by(movieId) %>% 
+  summarise(n = n()) %>% 
+  arrange(n)
+
+
 
 
 categories <- str_split(movies$genres,"\\|", simplify = TRUE)
@@ -56,31 +78,15 @@ ratingMatrix <-  movielens %>%
   select(userId, movie, rating) %>%
   pivot_wider(names_from = movie, values_from = rating) %>% 
   column_to_rownames("userId")
+str(ratingMatrix)
 ratingMatrix <- as.matrix(ratingMatrix)
+dim(ratingMatrix)
 
 # Test/Train --------------------------------------------------------------
 set.seed(2187)
-testPos <- sample(which(!is.na(ratingMatrix)), 0.2*(length(which(!is.na(ratingMatrix)))))  
-testRating <- ratingMatrix[testPos]
+test <- sample(which(!is.na(ratingMatrix)), 0.2*(length(which(!is.na(ratingMatrix)))))  
+names(test) <- ratingMatrix[test]
 trainMatrix <- ratingMatrix
-trainMatrix[testPos] <- NA
-
-head(sort(testPos), 10)
+trainMatrix[test] <- NA
 
 
-# Benchmark ---------------------------------------------------------------
-set.seed(1236)
-seeds <- sample(1:1000000000, 1500)
-benchErrors <- expand.grid(n = 1:length(seeds), RMSE = NA, MAE = NA)
-
-for(i in 1:length(seeds)){
-  set.seed(seeds[i])
-  benchRating <- sample(1:5, replace = TRUE, length(testRating))
-  diffRatings <- testRating - benchRating
-  benchErrors$RMSE[i] <- sum((diffRatings^2))*1/length(diffRatings)
-  benchErrors$MAE[i] <- sum((abs(diffRatings)))*1/length(diffRatings)
-}
-
-benchErrors %>% 
-  select(RMSE,MAE) %>% 
-  summarise_all(.funs = mean)
