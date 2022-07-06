@@ -14,7 +14,7 @@ ratings %>%
 movies20 <- ratings %>% 
   group_by(movieId) %>% 
   summarise(n = n()) %>%
-  filter(n >= 25)
+  filter(n >= 20)
 
 
 ratings <- ratings %>% 
@@ -29,7 +29,7 @@ ratings %>%
 user20 <- ratings %>% 
   group_by(userId) %>% 
   summarise(n = n()) %>%
-  filter(n >= 25)
+  filter(n >= 20)
 
 
 ratings <- ratings %>% 
