@@ -14,7 +14,7 @@ ratings %>%
 movies20 <- ratings %>% 
   group_by(movieId) %>% 
   summarise(n = n()) %>%
-  filter(n >= 20)
+  filter(n >= 15)
 
 
 ratings <- ratings %>% 
@@ -29,7 +29,7 @@ ratings %>%
 user20 <- ratings %>% 
   group_by(userId) %>% 
   summarise(n = n()) %>%
-  filter(n >= 20)
+  filter(n >= 15)
 
 
 ratings <- ratings %>% 
@@ -88,5 +88,5 @@ test <- sample(which(!is.na(ratingMatrix)), 0.2*(length(which(!is.na(ratingMatri
 names(test) <- ratingMatrix[test]
 trainMatrix <- ratingMatrix
 trainMatrix[test] <- NA
-
+test.ratings <- as.numeric(names(test))
 

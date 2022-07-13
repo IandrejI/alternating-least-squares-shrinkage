@@ -1,5 +1,5 @@
 source("code/models/ALS.R")
-set.seed(321489)
+seed <- set.seed(321489)
 
 M <- matrix(sample(c(1:5, NA), 10000, T), nrow = 100)
 
